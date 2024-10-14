@@ -155,3 +155,4 @@ def generate_solution(model, tokenizer, problem, max_tokens=100):
 # Test the model
 test_problem = "Implement a binary search function"
 print(generate_solution(model, tokenizer, test_problem))
+print("check the sensitive information once again")
