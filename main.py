@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import Dataset, DataLoader
 
-# Simplified GPT model
 class GPT(nn.Module):
     def __init__(self, vocab_size, embed_size, num_heads, num_layers, max_seq_len):
         super(GPT, self).__init__()
@@ -46,8 +45,6 @@ class TransformerBlock(nn.Module):
         x = x + self.attn(self.ln1(x), self.ln1(x), self.ln1(x))[0]
         x = x + self.mlp(self.ln2(x))
         return x
-
-# Dataset class for DSA problems and solutions
 class DSADataset(Dataset):
     def __init__(self, problems, solutions, tokenizer, max_seq_len):
         self.problems = problems
@@ -61,11 +58,9 @@ class DSADataset(Dataset):
     def __getitem__(self, idx):
         problem = self.problems[idx]
         solution = self.solutions[idx]
-        
-        # Tokenize and combine problem and solution
+    
         input_ids = self.tokenizer.encode(problem + " [SEP] " + solution)
-        
-        # Truncate or pad sequence
+    
         if len(input_ids) > self.max_seq_len:
             input_ids = input_ids[:self.max_seq_len]
         else:
@@ -73,7 +68,6 @@ class DSADataset(Dataset):
         
         return torch.tensor(input_ids), torch.tensor(input_ids)
 
-# Training function
 def train(model, train_dataset, val_dataset, epochs, batch_size, learning_rate):
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size)
@@ -102,40 +96,33 @@ def train(model, train_dataset, val_dataset, epochs, batch_size, learning_rate):
                 val_loss += loss.item()
         print(f"Validation Loss: {val_loss / len(val_loader)}")
 
-# Initialize model and other components
-vocab_size = 10000  # Adjust based on your tokenizer
+vocab_size = 10000 
 embed_size = 256
 num_heads = 8
 num_layers = 6
 max_seq_len = 512
 
 model = GPT(vocab_size, embed_size, num_heads, num_layers, max_seq_len)
-
-# Placeholder for tokenizer
-# You'll need to implement or use a pre-existing tokenizer
 class SimpleTokenizer:
     def encode(self, text):
-        # Implement tokenization logic
+
         pass
 
     def decode(self, ids):
-        # Implement detokenization logic
+
         pass
 
 tokenizer = SimpleTokenizer()
 
-# Placeholder for dataset
-# Replace with your actual DSA problems and solutions
+
 problems = ["Implement quicksort", "Write a function to reverse a linked list"]
 solutions = ["def quicksort(arr): ...", "def reverse_linked_list(head): ..."]
 
 train_dataset = DSADataset(problems[:800], solutions[:800], tokenizer, max_seq_len)
 val_dataset = DSADataset(problems[800:], solutions[800:], tokenizer, max_seq_len)
 
-# Train the model
 train(model, train_dataset, val_dataset, epochs=10, batch_size=32, learning_rate=3e-4)
 
-# Function to generate DSA solutions
 def generate_solution(model, tokenizer, problem, max_tokens=100):
     model.eval()
     input_ids = tokenizer.encode(problem + " [SEP] ")
@@ -152,7 +139,6 @@ def generate_solution(model, tokenizer, problem, max_tokens=100):
     
     return tokenizer.decode(input_ids[0].tolist())
 
-# Test the model
 test_problem = "Implement a binary search function"
 print(generate_solution(model, tokenizer, test_problem))
 print("check the sensitive information once again")
