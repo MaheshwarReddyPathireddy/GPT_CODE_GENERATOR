@@ -142,3 +142,22 @@ def generate_solution(model, tokenizer, problem, max_tokens=100):
 test_problem = "Implement a binary search function"
 print(generate_solution(model, tokenizer, test_problem))
 print("check the sensitive information once again")
+# prime number problem
+prime_problem = "Write a function to find if a number is prime"
+prime_solution = """
+def is_prime(n):
+    if n <= 1:
+        return False
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+"""
+
+problems.append(prime_problem)
+solutions.append(prime_solution)
+
+train_dataset = DSADataset(problems[:800], solutions[:800], tokenizer, max_seq_len)
+val_dataset = DSADataset(problems[800:], solutions[800:], tokenizer, max_seq_len)
+
+train(model, train_dataset, val_dataset, epochs=10, batch_size=32, learning_rate=3e-4)
